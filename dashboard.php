@@ -27,7 +27,7 @@ $total_customers_query = $conn->query("SELECT COUNT(customer_id) as total_custom
 $total_customers = $total_customers_query->fetch_assoc()['total_customers'];
 
 // --- Bar Chart Data (Last 7 days of sales from the sample data) ---
-// MODIFIED QUERY: Instead of CURDATE(), we use the last date from your sample data ('2025-08-20')
+// MODIFIED QUERY: Instead of CURDATE(), use the last date from your sample data ('2025-08-20')
 // to ensure the chart has data to display.
 $weekly_sales_query = $conn->query("
     SELECT 

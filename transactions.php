@@ -7,7 +7,7 @@ $sort = $_GET['sort'] ?? 'date_desc';
 
 $sql = "
     SELECT t.transaction_id, CONCAT(c.first_name, ' ', c.last_name) as customer_name, 
-           i.item_name, t.quantity, t.total_amount, t.transaction_date
+           i.item_name, t.quantity, t.total_amount, t.date_added
     FROM transactions t
     JOIN customer c ON t.customer_id = c.customer_id
     JOIN items i ON t.item_id = i.item_id
@@ -19,7 +19,7 @@ if (!empty($search)) {
 
 switch ($sort) {
     case 'date_asc':
-        $sql .= " ORDER BY t.transaction_date ASC";
+        $sql .= " ORDER BY t.date_added ASC";
         break;
     case 'amount_asc':
         $sql .= " ORDER BY t.total_amount ASC";
@@ -28,7 +28,7 @@ switch ($sort) {
         $sql .= " ORDER BY t.total_amount DESC";
         break;
     default: // date_desc
-        $sql .= " ORDER BY t.transaction_date DESC";
+        $sql .= " ORDER BY t.date_added DESC";
 }
 
 $result = $conn->query($sql);
@@ -108,7 +108,7 @@ $result = $conn->query($sql);
                             <td><?php echo htmlspecialchars($row["item_name"]); ?></td>
                             <td><?php echo $row["quantity"]; ?></td>
                             <td><?php echo format_currency($row["total_amount"]); ?></td>
-                            <td><?php echo date("F j, Y, g:i a", strtotime($row["transaction_date"])); ?></td>
+                            <td><?php echo date("F j, Y, g:i a", strtotime($row["date_added"])); ?></td>
                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>

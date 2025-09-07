@@ -65,7 +65,7 @@ $pie_chart_query = $conn->query("
     JOIN items i ON t.item_id = i.item_id
     GROUP BY t.item_id
     ORDER BY item_sales DESC
-    LIMIT 7
+    LIMIT 10
 ");
 $pie_chart_labels = [];
 $pie_chart_values = [];
@@ -152,7 +152,7 @@ $top_customers_query = $conn->query("
             <div class="dashboard-card">
                 <div class="card-icon"><i class="fas fa-fire"></i></div>
                 <div class="card-details">
-                    <h3>Hot Item</h3>
+                    <h3>Hot Item - Most Unit Sold</h3>
                     <p><?php echo htmlspecialchars($hot_item); ?></p>
                 </div>
             </div>
@@ -171,7 +171,7 @@ $top_customers_query = $conn->query("
                 <canvas id="salesBarChart"></canvas>
             </div>
             <div class="card clickable-widget" onclick="window.location.href='items.php';">
-                <h3>Hot Items</h3>
+                <h3>Hot Items - Most Value Sold</h3>
                 <canvas id="itemsPieChart"></canvas>
             </div>
         </section>
@@ -249,7 +249,9 @@ $top_customers_query = $conn->query("
                     data: <?php echo $pie_chart_values; ?>,
                     backgroundColor: [
                         '#f65c5cff', '#009900ff', '#2bd7faff', '#ff0505ff',
-                        '#ba3aedff', '#21b67aff', '#4c1d95'
+                        '#ba3aedff', '#21b67aff', '#4c1d95', '#757575ff',
+                        '#efff3fff', '#1327ffff'
+
                     ],
                     hoverOffset: 4
                 }]

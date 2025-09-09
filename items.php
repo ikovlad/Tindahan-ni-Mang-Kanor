@@ -48,7 +48,7 @@ $result = $conn->query($sql);
     <aside class="sidebar">
         <div class="logo">
             <img src="logo.png">
-            <p>Sari-sari Store</p>
+            <h4>Sari-sari Store</h4>
         </div>
         <nav>
             <ul>
@@ -92,7 +92,7 @@ $result = $conn->query($sql);
         </section>
 
         <section class="table-container card">
-            <h2>Items Table</h2>
+            <h2>ITEMS TABLE</h2>
             <table>
                 <thead>
                     <tr>

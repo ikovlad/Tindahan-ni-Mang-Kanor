@@ -1,15 +1,26 @@
-/* style.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
+/* --- Root Variables --- */
 :root {
-    --primary-color: #ededf6;
+    --primary-color: #f5f7fa; /* Lighter background */
     --secondary-color: #ffffff;
-    --accent-color: #6d28d9; /* A nice purple */
+    --accent-color: #667eea; /* A nice, consistent purple-blue for highlights */
     --text-color: #333333;
     --border-color: #e0e0e0;
     --shadow-color: rgba(176, 56, 236, 0.05);
+
+    /* New colors for dashboard cards */
+    --card-green: #d1fae5;
+    --card-blue: #dbeafe;
+    --card-orange: #ffece5;
+    --card-purple: #e9d5ff;
+
+    /* New colors for card icons */
+    --icon-green: #065f46;
+    --icon-blue: #1e40af;
+    --icon-orange: #d97706;
+    --icon-purple: #7e22ce;
 }
 
+/* --- Base Styles --- */
 * {
     margin: 0;
     padding: 0;
@@ -23,6 +34,11 @@ body {
     color: var(--text-color);
 }
 
+h2 {
+    font-size: larger;
+    margin-bottom: 12px;
+}
+
 /* --- Sidebar Navigation --- */
 .sidebar {
     width: 250px;
@@ -30,21 +46,22 @@ body {
     padding: 20px;
     height: 100vh;
     position: fixed;
-    top: 10;
+    top: 0;
     left: 0;
     border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    z-index: 1000;
 }
 
 .sidebar .logo {
     display: flex;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 }
 
 .sidebar .logo img {
-    width: 85px;
-    height: 85px;
-    margin-right: 5px;
+    width: 86px;
+    height: 86px;
 }
 
 .sidebar nav ul {
@@ -52,7 +69,7 @@ body {
 }
 
 .sidebar nav ul li {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .sidebar nav ul li a {
@@ -69,6 +86,7 @@ body {
 .sidebar nav ul li a:hover {
     background-color: var(--accent-color);
     color: var(--secondary-color);
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
 }
 
 .sidebar nav ul li a i {
@@ -79,7 +97,7 @@ body {
 /* --- Main Content --- */
 .main-content {
     margin-left: 250px;
-    padding: 20px;
+    padding: 30px;
     width: calc(100% - 250px);
 }
 
@@ -106,66 +124,116 @@ header {
     color: #777;
 }
 
-/* --- Reusable Components (Cards, Tables, etc.) --- */
-.card {
-    background-color: var(--secondary-color);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 6px 15px var(--shadow-color);
-    border: 1px solid var(--border-color);
-}
-
 /* --- Dashboard Specific Styles --- */
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
-/* MODIFIED: Styles for the cards with icons */
+/* Base styles for all dashboard cards */
 .dashboard-card {
-    background-color: var(--secondary-color);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(175, 24, 213, 0.327);
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.dashboard-card .card-icon {
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(194, 10, 227, 0.12);
+}
+
+/* Specific color variants using dedicated classes */
+.dashboard-card.green {
+    background-color: var(--card-green);
+}
+.dashboard-card.green .card-icon {
+    background-color: #a7f3d0;
+    color: var(--icon-green);
+}
+.dashboard-card.green .card-details p {
+    color: var(--icon-green);
+}
+
+.dashboard-card.blue {
+    background-color: var(--card-blue);
+}
+.dashboard-card.blue .card-icon {
+    background-color: #93c5fd;
+    color: var(--icon-blue);
+}
+.dashboard-card.blue .card-details p {
+    color: var(--icon-blue);
+}
+
+.dashboard-card.orange {
+    background-color: var(--card-orange);
+}
+.dashboard-card.orange .card-icon {
+    background-color: #fed7aa;
+    color: var(--icon-orange);
+}
+.dashboard-card.orange .card-details p {
+    color: var(--icon-orange);
+}
+
+.dashboard-card.purple {
+    background-color: var(--card-purple);
+}
+.dashboard-card.purple .card-icon {
+    background-color: #e2b2ff;
+    color: var(--icon-purple);
+}
+.dashboard-card.purple .card-details p {
+    color: var(--icon-purple);
+}
+
+.card-icon {
     font-size: 1.5rem;
-    color: var(--accent-color);
-    background-color: #f3e8ff;
-    height: 40px;
-    width: 40px;
-    border-radius: 40%;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.dashboard-card .card-details h3 {
-    font-size: 0.7rem;
-    color: #121212;
+.card-details h3 {
+    font-size: 0.8rem;
+    color: #555;
     margin-bottom: 5px;
     font-weight: 500;
 }
 
-/* MODIFIED: Value text color changed to purple */
-.dashboard-card .card-details p {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--accent-color);
+.card-details p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 .charts-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+.card h3 {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .bottom-widgets {
@@ -174,20 +242,38 @@ header {
     gap: 20px;
 }
 
+/* --- Table Styles --- */
 .widget table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .widget th, .widget td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid var(--border-color);
 }
 
 .widget th {
-    font-weight: 500;
-    font-size: 0.8rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background-color: #f1f5f9; /* Light header color */
+    color: #444;
+}
+
+/* Zebra striping for table rows */
+.widget tbody tr:nth-child(odd) {
+    background-color: #f8fafc;
+}
+.widget tbody tr:nth-child(even) {
+    background-color: var(--secondary-color);
+}
+
+.widget tbody tr:hover {
+    background-color: #e2e8f0;
 }
 
 .widget a {
@@ -197,6 +283,16 @@ header {
 
 .widget a:hover {
     text-decoration: underline;
+}
+
+/* Make bottom widgets clickable */
+.clickable-widget {
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.clickable-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
 /* --- Pages with Tables (Customer, Items, Transactions) --- */
@@ -213,21 +309,26 @@ header {
     border-radius: 20px;
     border: 1px solid var(--border-color);
     font-size: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(60, 1, 95, 0.383);
 }
 
 .sort-container select {
     padding: 10px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(60, 1, 95, 0.383);
 }
 
 .table-container table {
     width: 100%;
-    border-collapse: collapse;
-    background: var(--secondary-color);
+    /* Replicating the consistent styling from the .widget table */
+    border-collapse: separate;
+    border-spacing: 0;
     border-radius: 15px;
-    overflow: hidden; /* Ensures border radius is respected */
-    box-shadow: 0 4px 15px var(--shadow-color);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(60, 1, 95, 0.383);
 }
 
 .table-container th, .table-container td {
@@ -237,20 +338,20 @@ header {
 }
 
 .table-container th {
-    background-color: #f8f9fa;
     font-weight: 600;
+    font-size: 0.9rem;
+    background-color: #f1f5f9;
+    color: #545454;
+}
+
+.table-container tbody tr:nth-child(odd) {
+    background-color: #f8fafc;
+}
+
+.table-container tbody tr:nth-child(even) {
+    background-color: var(--secondary-color);
 }
 
 .table-container tbody tr:hover {
-    background-color: #f1f3f5;
-}
-
-/* Make bottom widgets clickable */
-.clickable-widget {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-.clickable-widget:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    background-color: #d9dfe7;
 }

@@ -30,8 +30,8 @@ $total_customers = $total_customers_query->fetch_assoc()['total_customers'];
 // MODIFIED QUERY: Instead of CURDATE(), use the last date from your sample data ('2025-08-20')
 // to ensure the chart has data to display.
 $weekly_sales_query = $conn->query("
-    SELECT 
-        DAYNAME(date_added) as day, 
+    SELECT
+        DAYNAME(date_added) as day,
         SUM(total_amount) as total_sales
     FROM transactions
     WHERE date_added BETWEEN '2025-08-14' AND '2025-08-20'
@@ -103,6 +103,22 @@ $top_customers_query = $conn->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Tindahan ni Mang Kanor</title>
+    <!-- We are including this for aesthetic purposes. The original file has link rel="stylesheet" href="style.css" -->
+    <style>
+        .charts-container .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: none;
+        }
+
+        .charts-container .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* The original file had a style.css file. This is a small addition to make the charts look good. */
+    </style>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -112,7 +128,7 @@ $top_customers_query = $conn->query("
     <aside class="sidebar">
         <div class="logo">
             <img src="logo.png">
-            <p>Sari-sari Store</p>
+            <h4>Sari-sari Store</h4>
         </div>
         <nav>
             <ul>
@@ -135,29 +151,29 @@ $top_customers_query = $conn->query("
         </header>
 
         <section class="dashboard-cards">
-            <div class="dashboard-card">
+            <div class="dashboard-card green">
                 <div class="card-icon"><i class="fas fa-box-open"></i></div>
                 <div class="card-details">
                     <h3>Total Items</h3>
                     <p><?php echo number_format($total_items); ?></p>
                 </div>
             </div>
-            <div class="dashboard-card">
+            <div class="dashboard-card blue">
                 <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
                 <div class="card-details">
                     <h3>No. of Sales</h3>
                     <p><?php echo format_currency($total_sales); ?></p>
                 </div>
             </div>
-            <div class="dashboard-card">
+            <div class="dashboard-card orange">
                 <div class="card-icon"><i class="fas fa-fire"></i></div>
                 <div class="card-details">
                     <h3>Hot Item - Most Unit Sold</h3>
                     <p><?php echo htmlspecialchars($hot_item); ?></p>
                 </div>
             </div>
-            <div class="dashboard-card">
-                 <div class="card-icon"><i class="fas fa-users"></i></div>
+            <div class="dashboard-card purple">
+                <div class="card-icon"><i class="fas fa-users"></i></div>
                 <div class="card-details">
                     <h3>No. of Customer</h3>
                     <p><?php echo number_format($total_customers); ?></p>
@@ -216,8 +232,26 @@ $top_customers_query = $conn->query("
     </main>
 
     <script>
-        // Bar Chart for Weekly Sales
+        // Custom color palette for the charts
+        const chartColors = [
+            '#4A90E2', // Blue
+            '#50E3C2', // Green
+            '#F5A623', // Orange
+            '#F8E71C', // Yellow
+            '#9B59B6', // Purple
+            '#7ED321', // Lime
+            '#BD10E0', // Magenta
+            '#FF6384', // Pink
+            '#4BC0C0', // Teal
+            '#9966FF'  // Lavender
+        ];
+
+        // --- Bar Chart for Weekly Sales (Aesthetic version) ---
         const barCtx = document.getElementById('salesBarChart').getContext('2d');
+        const salesGradient = barCtx.createLinearGradient(0, 0, 0, 400);
+        salesGradient.addColorStop(0, '#667eea');
+        salesGradient.addColorStop(1, '#764ba2');
+
         new Chart(barCtx, {
             type: 'bar',
             data: {
@@ -225,35 +259,49 @@ $top_customers_query = $conn->query("
                 datasets: [{
                     label: 'Sales',
                     data: <?php echo $bar_chart_values; ?>,
-                    backgroundColor: 'rgba(89, 21, 198, 0.8)',
-                    borderColor: 'rgba(166, 90, 253, 1)',
+                    backgroundColor: salesGradient,
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
                     borderWidth: 1,
-                    borderRadius: 5
+                    borderRadius: 8,
+                    hoverBackgroundColor: '#87cefa' // A light blue on hover
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
+                plugins: {
+                    legend: { display: false },
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: 'sans-serif' }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                        ticks: {
+                            font: { family: 'sans-serif' }
+                        }
+                    }
+                }
             }
         });
 
-        // Pie Chart for Hot Items
+        // --- Pie Chart for Hot Items (Aesthetic version) ---
         const pieCtx = document.getElementById('itemsPieChart').getContext('2d');
         new Chart(pieCtx, {
-            type: 'pie',
+            type: 'doughnut', // Changed to doughnut for a modern look
             data: {
                 labels: <?php echo $pie_chart_labels; ?>,
                 datasets: [{
                     label: 'Total Sales',
                     data: <?php echo $pie_chart_values; ?>,
-                    backgroundColor: [
-                        '#f65c5cff', '#009900ff', '#2bd7faff', '#ff0505ff',
-                        '#ba3aedff', '#21b67aff', '#4c1d95', '#757575ff',
-                        '#efff3fff', '#1327ffff'
-
-                    ],
-                    hoverOffset: 4
+                    backgroundColor: chartColors,
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2,
+                    hoverOffset: 8
                 }]
             },
             options: {
@@ -261,8 +309,15 @@ $top_customers_query = $conn->query("
                 plugins: {
                     legend: {
                         position: 'right',
-                        labels: { boxWidth: 12 }
-                    }
+                        labels: { boxWidth: 12, padding: 20 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.formattedValue;
+                            }
+                        }
+                    },
                 }
             }
         });

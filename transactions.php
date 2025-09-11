@@ -32,6 +32,39 @@ switch ($sort) {
 }
 
 $result = $conn->query($sql);
+
+// --- Dashboard Card Data Retrieval for Transactions ---
+// Get the hot item by total value sold
+$hotItemValueSql = "
+    SELECT i.item_name, SUM(t.total_amount) AS total_revenue 
+    FROM transactions t
+    JOIN items i ON t.item_id = i.item_id
+    GROUP BY i.item_name
+    ORDER BY total_revenue DESC
+    LIMIT 1
+";
+$hotItemValueResult = $conn->query($hotItemValueSql);
+$hotItemValueName = "N/A";
+if ($hotItemValueResult && $hotItemValueResult->num_rows > 0) {
+    $row = $hotItemValueResult->fetch_assoc();
+    $hotItemValueName = htmlspecialchars($row['item_name']);
+}
+
+// Get the hot item by most units sold
+$hotItemUnitSql = "
+    SELECT i.item_name, SUM(t.quantity) AS total_units
+    FROM transactions t
+    JOIN items i ON t.item_id = i.item_id
+    GROUP BY i.item_name
+    ORDER BY total_units DESC
+    LIMIT 1
+";
+$hotItemUnitResult = $conn->query($hotItemUnitSql);
+$hotItemUnitName = "N/A";
+if ($hotItemUnitResult && $hotItemUnitResult->num_rows > 0) {
+    $row = $hotItemUnitResult->fetch_assoc();
+    $hotItemUnitName = htmlspecialchars($row['item_name']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,6 +100,23 @@ $result = $conn->query($sql);
             </div>
         </header>
 
+        <section class="dashboard-cards">
+            <div class="dashboard-card green">
+                <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="card-details">
+                    <h3>Hot Item - Value</h3>
+                    <p><?php echo $hotItemValueName; ?></p>
+                </div>
+            </div>
+            <div class="dashboard-card blue">
+                <div class="card-icon"><i class="fas fa-box-open"></i></div>
+                <div class="card-details">
+                    <h3>Hot Item - Units</h3>
+                    <p><?php echo $hotItemUnitName; ?></p>
+                </div>
+            </div>
+        </section>
+
         <section class="page-header">
             <div class="search-container">
                 <form action="transactions.php" method="get">
@@ -74,15 +124,15 @@ $result = $conn->query($sql);
                 </form>
             </div>
             <div class="sort-container">
-                 <form action="transactions.php" method="get" onchange="this.submit()">
-                    <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
-                    <select name="sort">
-                        <option value="date_desc" <?php if($sort == 'date_desc') echo 'selected'; ?>>Sort by Date (Newest)</option>
-                        <option value="date_asc" <?php if($sort == 'date_asc') echo 'selected'; ?>>Sort by Date (Oldest)</option>
-                        <option value="amount_desc" <?php if($sort == 'amount_desc') echo 'selected'; ?>>Sort by Amount (High-Low)</option>
-                        <option value="amount_asc" <?php if($sort == 'amount_asc') echo 'selected'; ?>>Sort by Amount (Low-High)</option>
-                    </select>
-                </form>
+                   <form action="transactions.php" method="get" onchange="this.submit()">
+                       <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
+                       <select name="sort">
+                           <option value="date_desc" <?php if($sort == 'date_desc') echo 'selected'; ?>>Sort by Date (Newest)</option>
+                           <option value="date_asc" <?php if($sort == 'date_asc') echo 'selected'; ?>>Sort by Date (Oldest)</option>
+                           <option value="amount_desc" <?php if($sort == 'amount_desc') echo 'selected'; ?>>Sort by Amount (High-Low)</option>
+                           <option value="amount_asc" <?php if($sort == 'amount_asc') echo 'selected'; ?>>Sort by Amount (Low-High)</option>
+                       </select>
+                   </form>
             </div>
         </section>
 
@@ -101,21 +151,21 @@ $result = $conn->query($sql);
                 </thead>
                 <tbody>
                      <?php if ($result->num_rows > 0): ?>
-                        <?php while($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $row["transaction_id"]; ?></td>
-                            <td><?php echo htmlspecialchars($row["customer_name"]); ?></td>
-                            <td><?php echo htmlspecialchars($row["item_name"]); ?></td>
-                            <td><?php echo $row["quantity"]; ?></td>
-                            <td><?php echo format_currency($row["total_amount"]); ?></td>
-                            <td><?php echo date("F j, Y, g:i a", strtotime($row["date_added"])); ?></td>
-                        </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="6">No transactions found</td>
-                        </tr>
-                    <?php endif; ?>
+                         <?php while($row = $result->fetch_assoc()): ?>
+                         <tr>
+                             <td><?php echo $row["transaction_id"]; ?></td>
+                             <td><?php echo htmlspecialchars($row["customer_name"]); ?></td>
+                             <td><?php echo htmlspecialchars($row["item_name"]); ?></td>
+                             <td><?php echo $row["quantity"]; ?></td>
+                             <td><?php echo format_currency($row["total_amount"]); ?></td>
+                             <td><?php echo date("F j, Y, g:i a", strtotime($row["date_added"])); ?></td>
+                         </tr>
+                         <?php endwhile; ?>
+                     <?php else: ?>
+                         <tr>
+                             <td colspan="6">No transactions found</td>
+                         </tr>
+                     <?php endif; ?>
                 </tbody>
             </table>
         </section>

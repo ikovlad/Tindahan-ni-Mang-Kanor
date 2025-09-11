@@ -34,6 +34,26 @@ switch ($sort) {
 }
 
 $result = $conn->query($sql);
+
+// --- Dashboard Card Data Retrieval for Items ---
+// Get total number of items
+$totalStockSql = "SELECT SUM(stock_quantity) AS total_stock FROM items";
+$totalStockResult = $conn->query($totalStockSql);
+$totalStock = 0;
+if ($totalStockResult) {
+    $row = $totalStockResult->fetch_assoc();
+    $totalStock = $row['total_stock'];
+}
+
+// Get the item with the lowest stock
+$lowestStockSql = "SELECT item_name FROM items ORDER BY stock_quantity ASC LIMIT 1";
+$lowestStockResult = $conn->query($lowestStockSql);
+$lowestStockName = "N/A";
+if ($lowestStockResult && $lowestStockResult->num_rows > 0) {
+    $row = $lowestStockResult->fetch_assoc();
+    $lowestStockName = htmlspecialchars($row['item_name']);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,6 +89,23 @@ $result = $conn->query($sql);
             </div>
         </header>
 
+        <section class="dashboard-cards">
+            <div class="dashboard-card green">
+                <div class="card-icon"><i class="fas fa-boxes"></i></div>
+                <div class="card-details">
+                    <h3>Total Stock</h3>
+                    <p><?php echo $totalStock; ?></p>
+                </div>
+            </div>
+            <div class="dashboard-card orange">
+                <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="card-details">
+                    <h3>Lowest Stock</h3>
+                    <p><?php echo $lowestStockName; ?></p>
+                </div>
+            </div>
+        </section>
+
         <section class="page-header">
             <div class="search-container">
                 <form action="items.php" method="get">
@@ -76,18 +113,18 @@ $result = $conn->query($sql);
                 </form>
             </div>
             <div class="sort-container">
-                 <form action="items.php" method="get" onchange="this.submit()">
-                    <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
-                    <select name="sort">
-                        <option value="item_id_asc" <?php if($sort == 'item_id_asc') echo 'selected'; ?>>Sort by ID</option>
-                        <option value="name_asc" <?php if($sort == 'name_asc') echo 'selected'; ?>>Sort by Name (A-Z)</option>
-                        <option value="name_desc" <?php if($sort == 'name_desc') echo 'selected'; ?>>Sort by Name (Z-A)</option>
-                        <option value="price_asc" <?php if($sort == 'price_asc') echo 'selected'; ?>>Sort by Price (Low-High)</option>
-                        <option value="price_desc" <?php if($sort == 'price_desc') echo 'selected'; ?>>Sort by Price (High-Low)</option>
-                        <option value="stock_asc" <?php if($sort == 'stock_asc') echo 'selected'; ?>>Sort by Stock (Low-High)</option>
-                        <option value="stock_desc" <?php if($sort == 'stock_desc') echo 'selected'; ?>>Sort by Stock (High-Low)</option>
-                    </select>
-                </form>
+                   <form action="items.php" method="get" onchange="this.submit()">
+                       <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">
+                       <select name="sort">
+                           <option value="item_id_asc" <?php if($sort == 'item_id_asc') echo 'selected'; ?>>Sort by ID</option>
+                           <option value="name_asc" <?php if($sort == 'name_asc') echo 'selected'; ?>>Sort by Name (A-Z)</option>
+                           <option value="name_desc" <?php if($sort == 'name_desc') echo 'selected'; ?>>Sort by Name (Z-A)</option>
+                           <option value="price_asc" <?php if($sort == 'price_asc') echo 'selected'; ?>>Sort by Price (Low-High)</option>
+                           <option value="price_desc" <?php if($sort == 'price_desc') echo 'selected'; ?>>Sort by Price (High-Low)</option>
+                           <option value="stock_asc" <?php if($sort == 'stock_asc') echo 'selected'; ?>>Sort by Stock (Low-High)</option>
+                           <option value="stock_desc" <?php if($sort == 'stock_desc') echo 'selected'; ?>>Sort by Stock (High-Low)</option>
+                       </select>
+                   </form>
             </div>
         </section>
 

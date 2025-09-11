@@ -103,7 +103,7 @@ $top_customers_query = $conn->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Tindahan ni Mang Kanor</title>
-    <!-- We are including this for aesthetic purposes. The original file has link rel="stylesheet" href="style.css" -->
+    <!-- We are including this for aesthetic purposes.-->
     <style>
         .charts-container .card {
             border-radius: 12px;
@@ -117,7 +117,7 @@ $top_customers_query = $conn->query("
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* The original file had a style.css file. This is a small addition to make the charts look good. */
+        /* This is a small addition to make the charts look good. */
     </style>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -154,7 +154,7 @@ $top_customers_query = $conn->query("
             <div class="dashboard-card green">
                 <div class="card-icon"><i class="fas fa-box-open"></i></div>
                 <div class="card-details">
-                    <h3>Total Items</h3>
+                    <h3>Total Items (Total Stock)</h3>
                     <p><?php echo number_format($total_items); ?></p>
                 </div>
             </div>
@@ -183,7 +183,7 @@ $top_customers_query = $conn->query("
 
         <section class="charts-container">
             <div class="card">
-                <h3>Weekly Sales</h3>
+                <h3>Daily Sales - Sales in Last 7 Days</h3>
                 <canvas id="salesBarChart"></canvas>
             </div>
             <div class="card clickable-widget" onclick="window.location.href='items.php';">
@@ -246,7 +246,7 @@ $top_customers_query = $conn->query("
             '#9966FF'  // Lavender
         ];
 
-        // --- Bar Chart for Weekly Sales (Aesthetic version) ---
+        // --- Bar Chart for Weekly Sales  ---
         const barCtx = document.getElementById('salesBarChart').getContext('2d');
         const salesGradient = barCtx.createLinearGradient(0, 0, 0, 400);
         salesGradient.addColorStop(0, '#667eea');
@@ -263,7 +263,7 @@ $top_customers_query = $conn->query("
                     borderColor: 'rgba(255, 255, 255, 0.4)',
                     borderWidth: 1,
                     borderRadius: 8,
-                    hoverBackgroundColor: '#87cefa' // A light blue on hover
+                    hoverBackgroundColor: '#87cefa' // A light blue for hover
                 }]
             },
             options: {
@@ -289,7 +289,7 @@ $top_customers_query = $conn->query("
             }
         });
 
-        // --- Pie Chart for Hot Items (Aesthetic version) ---
+        // --- Pie Chart for Hot Items  ---
         const pieCtx = document.getElementById('itemsPieChart').getContext('2d');
         new Chart(pieCtx, {
             type: 'doughnut', // Changed to doughnut for a modern look
